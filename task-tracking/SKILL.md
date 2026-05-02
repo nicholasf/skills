@@ -36,11 +36,14 @@ General guidance (override with topology.md when present):
 
 ## Task file format
 
-File name: `tasks/pending/<slug>.md` — lowercase, hyphenated, descriptive.
+File name: `tasks/pending/<timestamp>-<slug>.md` — timestamp in `YYYY-MM-DDTHH-MM-SS` format (using `-` as the time separator so it is shell-safe), followed by a lowercase, hyphenated, descriptive slug. Example: `2026-05-02T14-30-00-add-user-avatar.md`.
+
+Generate the timestamp at the moment the file is created (use `date +%Y-%m-%dT%H-%M-%S` or the equivalent).
 
 ```markdown
 # <Title>
 
+**Created:** <YYYY-MM-DD HH:MM:SS>
 **Model:** <model name and why, e.g. "Qwen2.5-Coder 32B — mechanical rename across known files">
 **Status:** planned
 
@@ -146,7 +149,8 @@ The task file format includes a `## Results` section for the executing model to 
 
 When all **Done when** items are checked and (for delegated tasks) the user has confirmed:
 
-1. Move the file: `mv tasks/pending/<slug>.md tasks/completed/<slug>.md`
+1. Move the file: `mv tasks/pending/<timestamp>-<slug>.md tasks/completed/<timestamp>-<slug>.md`
+   The timestamp prefix is preserved so completed tasks are ordered chronologically in a directory listing.
 2. Update its **Status** line to `completed`.
 3. Append a concise summary to `development-log.md` covering what changed and any decisions made during execution.
 
