@@ -78,6 +78,48 @@ How to sequence the work. Note any non-obvious ordering constraints.
 **Summary:** 
 ```
 
+## Handing off to pond
+
+Pond receives tasks via the OpenAI-compatible chat completions API. The task file content **must be read and embedded in the request payload** — pond cannot access the filesystem directly.
+
+Use Python to build the payload so the file content is safely interpolated:
+
+```bash
+python3 -c "
+import json
+task = open('tasks/pending/<slug>.md').read()
+payload = {
+  'model': 'qwen3-coder-30b.gguf',
+  'stream': False,
+  'max_tokens': 16000,
+  'messages': [
+    {
+      'role': 'system',
+      'content': 'You are an expert developer executing a precisely specified coding task. Read the task carefully, implement everything described, and fill in the ## Results section when done.'
+    },
+    {
+      'role': 'user',
+      'content': 'Working directory: /path/to/project\n\nExecute this task in full. Output the complete content of each file, clearly labelled with its path.\n\n' + task
+    }
+  ]
+}
+print(json.dumps(payload))
+" > /tmp/task-payload.json
+
+curl -s http://pond:9337/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d @/tmp/task-payload.json \
+  | python3 -c "
+import json, sys
+resp = json.load(sys.stdin)
+print(resp['choices'][0]['message']['content'])
+usage = resp.get('usage', {})
+print(f\"--- tokens: prompt={usage.get('prompt_tokens')}, completion={usage.get('completion_tokens')} ---\")
+"
+```
+
+**Do not** use shell heredocs with `$(cat ...)` substitution — the file content will not be interpolated inside a heredoc and pond will receive an empty or literal string.
+
 ## Executing a task
 
 1. Read the task file fully before starting.
