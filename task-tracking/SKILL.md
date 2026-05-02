@@ -20,6 +20,8 @@ For small, self-contained edits, just do the work.
 
 Every task file must include a `model` field specifying which model should execute it.
 
+**Token economization:** A key reason to delegate a task to a local model (e.g. Qwen2.5-Coder) is to avoid spending cloud API tokens on work that does not require high-level reasoning. Cloud model tokens are expensive; local model inference is effectively free. A cloud model should design the task precisely and then hand off execution to a cheaper model, reserving its own involvement for architecture, ambiguous decisions, and review.
+
 **If a `topology.md` file exists in the project root, read it before assigning a model.** It describes the available models, their capabilities, and their intended use cases. Use it to make an informed assignment.
 
 If no `topology.md` is present, use your best judgement and note the assumption in the task file.
@@ -68,6 +70,12 @@ How to sequence the work. Note any non-obvious ordering constraints.
 - [ ] Specific, verifiable outcome
 - [ ] Acceptance command that must pass, e.g. `pnpm jest --forceExit`
 - [ ] Entry added to `development-log.md`
+
+## Results
+<!-- Filled in by the executing model after completion -->
+**Tests:** 
+**Files changed:** 
+**Summary:** 
 ```
 
 ## Executing a task
@@ -78,9 +86,23 @@ How to sequence the work. Note any non-obvious ordering constraints.
 4. Resolve any **Open questions** encountered during execution; note the decision in the file.
 5. Verify every item in **Done when** before declaring the task complete.
 
+## Reviewing a delegated task
+
+When a task was executed by a delegated (local) model, the reviewing cloud model must **not** read the full changed files — doing so consumes the API tokens that delegation was intended to save. Instead:
+
+1. Read only the **Results** section of the task file (filled in by the executing model).
+2. Run or confirm the acceptance commands listed in **Done when** (test counts, typecheck). The test suite is the primary correctness signal.
+3. Present a short summary to the user:
+   - What changed (file list and counts, not contents)
+   - Test results (suite count, pass/fail)
+   - Any decisions made during execution
+4. Wait for the user to confirm before marking the task complete. The user reviews the code directly if they wish.
+
+The task file format includes a `## Results` section for the executing model to fill in. If it is absent or incomplete, ask the executing model to add it before proceeding.
+
 ## Completing a task
 
-When all **Done when** items are checked:
+When all **Done when** items are checked and (for delegated tasks) the user has confirmed:
 
 1. Move the file: `mv tasks/pending/<slug>.md tasks/completed/<slug>.md`
 2. Update its **Status** line to `completed`.
