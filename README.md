@@ -22,16 +22,22 @@ The rule of thumb for what belongs here: if a skill would be useful in more than
 
 Pi auto-discovers skills from `~/.agents/skills/`. Rather than maintaining a copy there, symlink that path to this repo so the repo stays the single source of truth.
 
-**First machine setup:**
+A helper script handles this for you:
 
 ```bash
 # Clone the repo
 git clone git@github.com:nicholasf/skills.git ~/code/github/nicholasf/skills
+cd ~/code/github/nicholasf/skills
 
-# Create the symlink (remove the directory first if it already exists)
-mkdir -p ~/.agents
-ln -s ~/code/github/nicholasf/skills ~/.agents/skills
+# Create the symlink
+bash scripts/symlink.sh
 ```
+
+The script will:
+1. Resolve the repo root automatically (works regardless of where you cloned it).
+2. Create `~/.agents/` if it doesn't exist.
+3. Replace an existing symlink at `~/.agents/skills` if one is already there.
+4. Exit with an error if `~/.agents/skills` is a real directory — move or remove it first in that case.
 
 **Verify pi can see the skills:**
 
@@ -41,12 +47,7 @@ ls ~/.agents/skills/
 
 Pi will pick up all skills in this directory at startup with no further configuration needed.
 
-**Subsequent machines** — repeat the same two steps. If `~/.agents/skills/` already exists as a real directory (from prior use), move or remove it first:
-
-```bash
-rm -rf ~/.agents/skills
-ln -s ~/code/github/nicholasf/skills ~/.agents/skills
-```
+**Subsequent machines** — clone the repo, then run `bash scripts/symlink.sh` again.
 
 ## Adding a new skill
 
