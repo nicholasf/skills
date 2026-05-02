@@ -16,7 +16,8 @@ The rule of thumb for what belongs here: if a skill would be useful in more than
 
 | Skill | Description |
 |---|---|
-| [`task-tracking`](task-tracking/SKILL.md) | Manage work as structured task files in `tasks/pending/` and `tasks/completed/`. Covers task format, model assignment, and the completion lifecycle. |
+| [`load-topology`](load-topology/SKILL.md) | Read the local system topology to discover available machines and models. Use when the user wants to see what models can be run, load a model on a machine, or prepare for task delegation. Triggers on "load topology", "what models are available", "which machines are running", "start a model", "load a model on", or "show me the topology". |
+| [`task-tracking`](task-tracking/SKILL.md) | Manage work as structured task files in tasks/pending/ and tasks/completed/. Use when planning a non-trivial piece of work, creating a task file, assigning a model to a task, executing a task, or marking a task complete. Triggers on "create a task", "write a task for", "what tasks are pending", "mark this task complete", or "update the task". |
 
 ## Symlink setup (pi auto-discovery)
 
@@ -48,6 +49,24 @@ ls ~/.agents/skills/
 Pi will pick up all skills in this directory at startup with no further configuration needed.
 
 **Subsequent machines** — clone the repo, then run `bash scripts/symlink.sh` again.
+
+## Keeping README.md in sync
+
+The Skills table is auto-generated from each skill's `SKILL.md` frontmatter (`name` and `description` fields). A pre-commit hook regenerates and stages the table on every commit, so it never goes stale.
+
+The hook is stored in `.git-hooks/pre-commit` and activated via:
+
+```bash
+git config core.hooksPath .git-hooks
+```
+
+This runs automatically after cloning if you use the symlink setup script (which calls `git config` for you). On a new machine, run it once manually if you skipped the setup script.
+
+To regenerate the table without committing:
+
+```bash
+bash scripts/update-readme.sh
+```
 
 ## Adding a new skill
 

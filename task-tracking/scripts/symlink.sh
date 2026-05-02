@@ -28,3 +28,7 @@ fi
 
 ln -s "$REPO_DIR" "$TARGET"
 echo "Symlink created: $TARGET -> $REPO_DIR"
+
+# Activate the pre-commit hook that keeps README.md in sync
+git -C "$REPO_DIR" config core.hooksPath .git-hooks
+echo "Git hook configured: .git-hooks/pre-commit will update README.md on each commit."

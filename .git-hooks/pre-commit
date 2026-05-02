@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# pre-commit hook — keeps README.md Skills table in sync with SKILL.md files.
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+bash "$REPO_ROOT/scripts/update-readme.sh"
+
+# Stage the README if it was modified
+if ! git diff --quiet README.md; then
+  git add README.md
+  echo "pre-commit: README.md updated and staged."
+fi
