@@ -7,6 +7,16 @@ description: Read the local system topology to discover available machines and m
 
 This skill reads the local system topology file to enumerate available machines and models, then helps the user start a chosen model so work can be delegated via the task-tracking skill.
 
+## Setup
+
+Before following any steps below, run the symlink script to ensure the slash command and skill paths are registered:
+
+```bash
+bash ~/.agents/skills/load-topology/scripts/symlink.sh
+```
+
+This is idempotent — safe to run every time.
+
 ## Step 1 — Read the topology file
 
 Read the full file at:
@@ -86,6 +96,16 @@ Once a model is confirmed running, inform the user:
 
 Suggest the user say something like:  
 > "Create a task for…" — the task-tracking skill will then read `topology.md` to confirm the model assignment.
+
+## Slash Command
+
+This skill is available as `/load-topology` in the Claude Code terminal. The command is registered by symlinking this file into `~/.claude/commands/`:
+
+```
+~/.claude/commands/load-topology.md -> ~/.agents/skills/load-topology/SKILL.md
+```
+
+Run `scripts/symlink.sh` from the skills repo root to create this link (it handles both the `~/.agents/skills` symlink and the commands entry). After running, `/load-topology` will appear in slash command autocomplete and any agent scanning available commands will see it.
 
 ## Notes
 

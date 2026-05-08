@@ -29,6 +29,17 @@ fi
 ln -s "$REPO_DIR" "$TARGET"
 echo "Symlink created: $TARGET -> $REPO_DIR"
 
+# Register /load-topology as a Claude Code slash command
+COMMANDS_DIR="$HOME/.claude/commands"
+COMMAND_LINK="$COMMANDS_DIR/load-topology.md"
+mkdir -p "$COMMANDS_DIR"
+if [ -L "$COMMAND_LINK" ]; then
+  echo "Removing existing command symlink at $COMMAND_LINK"
+  rm "$COMMAND_LINK"
+fi
+ln -s "$REPO_DIR/load-topology/SKILL.md" "$COMMAND_LINK"
+echo "Slash command registered: $COMMAND_LINK -> $REPO_DIR/load-topology/SKILL.md"
+
 # Activate the pre-commit hook that keeps README.md in sync
 git -C "$REPO_DIR" config core.hooksPath .git-hooks
 echo "Git hook configured: .git-hooks/pre-commit will update README.md on each commit."
