@@ -145,6 +145,18 @@ When a task was executed by a delegated (local) model, the reviewing cloud model
 
 The task file format includes a `## Results` section for the executing model to fill in. If it is absent or incomplete, ask the executing model to add it before proceeding.
 
+## Correcting a delegated task
+
+When the output has concrete errors, do not fix them directly — send the task back to pond with a correction spec appended to the task file. This keeps the full review/correction history in one place.
+
+1. Add a `## Corrections — Round N` section at the bottom of the task file (above `## Results`).
+2. List each error as a numbered item. Be specific: state what was wrong and exactly what the correct behaviour is. Do not leave room for interpretation.
+3. Re-send the task to pond using the same Python + curl pattern.
+4. Repeat until the output is correct, incrementing the round number each time.
+5. Apply any trivial mechanical fixes yourself (e.g. missing timeout values, a single renamed field) rather than burning another round — note what you changed in `## Results`.
+
+This pattern means pond's output and all correction rounds are permanently recorded in the task file.
+
 ## Completing a task
 
 When all **Done when** items are checked and (for delegated tasks) the user has confirmed:
