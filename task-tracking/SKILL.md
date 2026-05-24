@@ -81,6 +81,24 @@ How to sequence the work. Note any non-obvious ordering constraints.
 **Summary:** 
 ```
 
+## What belongs in a task file — and what does not
+
+A task file is a **specification**, not an implementation. The executing model (pond) writes the code; the task file tells it what to write.
+
+**Include:**
+- File paths to create or modify
+- Interfaces, method signatures, and type contracts (what the code must satisfy)
+- Behaviour constraints and invariants (e.g. "hash with SHA-256 before storing", "return 401 if the header is absent")
+- Known gotchas or non-obvious ordering constraints
+- Verifiable acceptance criteria
+
+**Do not include:**
+- Working implementation code — not even as a "starting point" or "example". Pond will shadow it verbatim and the cloud model has done the work for free.
+- File contents that pond can derive from the specification
+- Pseudocode that is close enough to real code that pond will copy it rather than reason about it
+
+If you catch yourself writing a complete function body, stop. Replace it with a sentence describing what the function must do and what it must return.
+
 ## Handing off to pond
 
 Pond receives tasks via the OpenAI-compatible chat completions API. The task file content **must be read and embedded in the request payload** — pond cannot access the filesystem directly.

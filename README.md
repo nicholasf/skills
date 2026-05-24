@@ -16,6 +16,7 @@ The rule of thumb for what belongs here: if a skill would be useful in more than
 
 | Skill | Description |
 |---|---|
+| [`ask-foreign-agent`](ask-foreign-agent/SKILL.md) | Run qwen3-coder on pond as an interactive agent inside the Claude Code session. qwen can read files, run bash commands, and reason about the codebase. Claude relays the conversation and prefixes qwen's output with [pond-qwen]. |
 | [`load-topology`](load-topology/SKILL.md) | Read the local system topology to discover available machines and models. Use when the user wants to see what models can be run, load a model on a machine, or prepare for task delegation. Triggers on "load topology", "what models are available", "which machines are running", "start a model", "load a model on", or "show me the topology". |
 | [`task-tracking`](task-tracking/SKILL.md) | Manage work as structured task files in tasks/pending/ and tasks/completed/. Use when planning a non-trivial piece of work, creating a task file, assigning a model to a task, executing a task, or marking a task complete. Triggers on "create a task", "write a task for", "what tasks are pending", "mark this task complete", or "update the task". |
 
