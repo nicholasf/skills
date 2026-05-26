@@ -10,99 +10,18 @@ Usage:
 import argparse
 import os
 import re
-import subprocess
 import sys
-from pathlib import Path
 
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from langchain_core.tools import tool
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_openai import ChatOpenAI
+
+from tools import TOOL_MAP, TOOLS
+from tools import _context
 
 POND_URL = "http://pond:9337/v1"
 MODEL = "qwen3-coder-30b.gguf"
 PREFIX = "pond-qwen"
 MAX_ITERATIONS = 20
-
-_cwd: str = "."
-
-
-def _run(command: str, timeout: int = 30) -> str:
-    try:
-        result = subprocess.run(
-            command,
-            shell=True,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            cwd=_cwd,
-        )
-        output = result.stdout
-        if result.returncode != 0 and result.stderr:
-            output += f"\nSTDERR: {result.stderr.strip()}"
-        return output.strip() or "(no output)"
-    except subprocess.TimeoutExpired:
-        return f"Command timed out after {timeout}s"
-    except Exception as e:
-        return f"Error: {e}"
-
-
-@tool
-def read_file(path: str) -> str:
-    """Read the full contents of a file. Path may be absolute or relative to the working directory."""
-    target = Path(path) if Path(path).is_absolute() else Path(_cwd) / path
-    try:
-        return target.read_text()
-    except Exception as e:
-        return f"Error reading {path}: {e}"
-
-
-@tool
-def bash(command: str) -> str:
-    """
-    Run a bash command in the project working directory.
-    Always exclude node_modules from any recursive file operations.
-    Do not run destructive commands (rm -rf, git reset --hard, etc.).
-    """
-    return _run(command)
-
-
-@tool
-def find_files(pattern: str, directory: str = ".") -> str:
-    """
-    Find files matching a name pattern, excluding node_modules.
-    Example: find_files("*.ts", "backend/saga/src")
-    """
-    return _run(
-        f'find {directory} -name "{pattern}" -not -path "*/node_modules/*" | sort'
-    )
-
-
-@tool
-def grep(pattern: str, path: str = ".") -> str:
-    """
-    Search for a pattern in files, excluding node_modules.
-    Example: grep("runUseCase", "backend/saga/src")
-    """
-    return _run(
-        f'grep -r --exclude-dir=node_modules -n "{pattern}" {path}'
-    )
-
-
-@tool
-def write_file(path: str, content: str, executable: bool = False) -> str:
-    """
-    Write content to a file. Path may be absolute or relative to the working directory.
-    Set executable=true for shell scripts.
-    """
-    target = Path(path) if Path(path).is_absolute() else Path(_cwd) / path
-    try:
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(content)
-        if executable:
-            target.chmod(target.stat().st_mode | 0o111)
-        return f"Written: {target} ({len(content)} bytes)"
-    except Exception as e:
-        return f"Error writing {path}: {e}"
 
 
 def make_llm() -> ChatOpenAI:
@@ -112,10 +31,6 @@ def make_llm() -> ChatOpenAI:
         model=MODEL,
         temperature=0,
     )
-
-
-TOOLS = [read_file, bash, find_files, grep, write_file]
-TOOL_MAP = {t.name: t for t in TOOLS}
 
 
 _FUNC_RE = re.compile(r'(?:<tool_call>\s*)?<function=(\w+)>(.*?)</function>\s*(?:</tool_call>)?', re.DOTALL)
@@ -199,8 +114,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    global _cwd
-    _cwd = os.path.abspath(args.cwd)
+    _context.working_directory = os.path.abspath(args.cwd)
 
     message = " ".join(args.message)
     run(message, args.thread)
