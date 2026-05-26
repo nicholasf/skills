@@ -16,7 +16,6 @@ These are the tools available to qwen3-coder when executing a task via the ask-f
 | `edit_file` | `edit_file(path, old_string, new_string)` | Replace an exact string in a file; fails if not found or not unique |
 | `list_directory` | `list_directory(path=".", max_depth=3)` | List directory tree excluding node_modules, .git, __pycache__, .venv, dist |
 | `git_diff` | `git_diff()` | Show unstaged and staged working-tree changes |
-| `typecheck` | `typecheck()` | Run `pnpm tsc --noEmit` on backend/saga (yggd repo only) |
 
 ## Notes
 

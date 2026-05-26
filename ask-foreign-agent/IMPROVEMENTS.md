@@ -95,23 +95,6 @@ def git_diff() -> str:
     return result or "(no changes)"
 ```
 
-### 4. `typecheck()` — TypeScript verification
-
-Lets pond verify saga code changes without having to remember the right pnpm command.
-The `_cwd` is the project root so we need to cd into `backend/saga`.
-
-```python
-@tool
-def typecheck() -> str:
-    """
-    Run the TypeScript compiler on backend/saga (no emit).
-    Use after making TypeScript changes to catch type errors before declaring done.
-    """
-    return _run("cd backend/saga && pnpm tsc --noEmit", timeout=60)
-```
-
-This is only useful when `--cwd` is the yggd repo root. If the skill is used in other
-repos, consider making the path configurable or dropping this tool.
 
 ## Implementation notes
 
