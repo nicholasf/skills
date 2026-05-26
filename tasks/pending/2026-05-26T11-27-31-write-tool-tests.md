@@ -18,15 +18,7 @@ pytest must be added to `pyproject.toml` before tests can run.
 
 ## Available tools
 
-You are running in an agentic loop with the following tools:
-
-| Tool | Signature | What it does |
-|---|---|---|
-| `read_file` | `read_file(path)` | Read a file by absolute or relative path |
-| `bash` | `bash(command)` | Run a shell command in the working directory |
-| `find_files` | `find_files(pattern, directory=".")` | Find files by name pattern, node_modules excluded |
-| `grep` | `grep(pattern, path=".")` | Search file contents, node_modules excluded |
-| `write_file` | `write_file(path, content, executable=False)` | Write (overwrite) a file |
+Read `ask-foreign-agent/TOOLS.md` for the full tool list and usage notes.
 
 **Read all files listed in "Files to read" before writing anything.**
 
