@@ -225,6 +225,16 @@ When the output has concrete errors, do not fix them directly — send the task 
 
 This pattern means pond's output and all correction rounds are permanently recorded in the task file.
 
+## Deprecating a task
+
+When a task is superseded before completion — replaced by a programme task, a better-scoped sub-task, or a changed approach — mark it deprecated rather than completed.
+
+1. Update its **Status** line to `deprecated`.
+2. Add a `**Deprecated by:** <timestamp>-<slug>.md` line immediately below.
+3. Move the file to `tasks/deprecated/`.
+
+Do not use `tasks/completed/` for deprecated tasks. Completed means the work was done; deprecated means it was abandoned in favour of something else.
+
 ## Completing a task
 
 When all **Done when** items are checked and (for delegated tasks) the user has confirmed:
@@ -238,8 +248,9 @@ When all **Done when** items are checked and (for delegated tasks) the user has 
 
 ```
 tasks/
-  pending/    # tasks not yet complete
-  completed/  # finished tasks, kept for reference
+  pending/      # tasks not yet complete
+  completed/    # finished tasks, kept for reference
+  deprecated/   # tasks superseded before completion
 development-log.md
 ```
 
