@@ -81,6 +81,56 @@ How to sequence the work. Note any non-obvious ordering constraints.
 **Summary:** 
 ```
 
+## Programme tasks
+
+A **programme task** coordinates a group of related sub-tasks. Use one when the full work spans multiple pond runs that are too large to delegate as a single task.
+
+### Programme file format
+
+Keep the programme under 20 lines. It is an index, not a spec — the spec lives in the sub-tasks.
+
+```markdown
+# <Title>
+
+**Type:** programme
+**Created:** <YYYY-MM-DD HH:MM:SS>
+**Status:** in-progress
+
+## Goal
+One sentence.
+
+## Sub-tasks
+- [ ] [<slug>](../pending/<timestamp>-<slug>.md)
+- [ ] [<slug>](../pending/<timestamp>-<slug>.md)
+```
+
+Check off each item as the sub-task is completed. Mark the programme `completed` when all sub-tasks are checked.
+
+### Sub-task file format
+
+Keep each sub-task under 40 lines. Use the standard task format plus two extra fields at the top:
+
+```
+**Type:** sub-task
+**Parent:** <timestamp>-<programme-slug>.md
+```
+
+### Context economy rules
+
+These rules apply to both programme tasks and sub-tasks:
+
+1. **Only write what pond cannot derive.** If pond can answer by running `read_file` or `grep`, leave it out.
+2. **No file contents.** Reference file paths; let pond read them.
+3. **No repeated background.** The programme holds the goal; sub-tasks hold only the constraints for their slice.
+4. **No pseudocode close to real code.** Describe behaviour and return types; pond writes the implementation.
+
+### Workflow
+
+1. Claude writes the programme task file and all sub-task files.
+2. Claude runs pond on one sub-task at a time via `ask-foreign-agent`.
+3. After each sub-task completes, Claude checks it off in the programme file and moves it to `tasks/completed/`.
+4. When all sub-tasks are checked off, Claude marks the programme `completed` and moves it to `tasks/completed/`.
+
 ## What belongs in a task file — and what does not
 
 A task file is a **specification**, not an implementation. The executing model (pond) writes the code; the task file tells it what to write.

@@ -21,7 +21,7 @@ from tools import _context
 POND_URL = "http://pond:9337/v1"
 MODEL = "qwen3-coder-30b.gguf"
 PREFIX = "pond-qwen"
-MAX_ITERATIONS = 20
+MAX_ITERATIONS = 400
 
 
 def make_llm() -> ChatOpenAI:
