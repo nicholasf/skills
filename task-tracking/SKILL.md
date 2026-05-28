@@ -232,6 +232,7 @@ When a task is superseded before completion — replaced by a programme task, a 
 1. Update its **Status** line to `deprecated`.
 2. Add a `**Deprecated by:** <timestamp>-<slug>.md` line immediately below.
 3. Move the file to `tasks/deprecated/`.
+4. Append a concise entry to `development-log.md` noting what the task was and why it was deprecated.
 
 Do not use `tasks/completed/` for deprecated tasks. Completed means the work was done; deprecated means it was abandoned in favour of something else.
 
