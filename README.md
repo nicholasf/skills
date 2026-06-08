@@ -1,3 +1,15 @@
+These skills have been given their own repos. 
+
+See 
+
+* [manage-skills-skill](https://github.com/nicholasf/manage-skills-skill)
+* [load-topology](https://github.com/nicholasf/manage-skills-skill)
+* [track-tasks-skill](https://github.com/nicholasf/track-tasks-skill)
+* [ask-remote-llm-skill](https://github.com/nicholasf/ask-foreign-llm-skill)
+* [ask-remote-agent-skill](https://github.com/nicholasf/ask-remote-agent-skill)
+
+
+
 # skills
 
 A personal collection of reusable, versioned [Agent Skills](https://agentskills.io/specification) for use with [pi](https://github.com/badlogic/pi-mono) and any other harness that implements the standard.
