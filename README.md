@@ -1,6 +1,6 @@
-These skills have been given their own repos. 
+I've moved the skills housed in this monorepo so each have their own repository. I won't be updating this one.
 
-See 
+Going forward please see 
 
 * [manage-skills-skill](https://github.com/nicholasf/manage-skills-skill)
 * [load-topology](https://github.com/nicholasf/manage-skills-skill)
